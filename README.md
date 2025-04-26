@@ -16,6 +16,8 @@ The second stream is focused on building a quantitative library with financial m
 
 - **Key Features**:
   - Implementation of common financial models (e.g., Black-Scholes, Monte Carlo simulation, option pricing models).
+ 
+  To get relevant results from the second stream, we must first focus on the first stream :)
     
 
 ### Installation
