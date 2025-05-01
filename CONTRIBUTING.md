@@ -20,7 +20,7 @@ cd QuantWork
 2. Create a New Branch
 Create a new branch for your work. Use a meaningful name that reflects the purpose of the branch:
 ```bash
-git checkout -b feature/your-branch-name
+git checkout -b yourname/feature/your-branch-name
 ```
 For example:
 ```bash
@@ -38,7 +38,7 @@ git commit -m "Brief description of your change"
 5. Push Your Branch to GitHub
 Push the branch to the remote repository:
 ```bash
-git push origin feature/your-branch-name
+git push origin yourname/feature/your-branch-name
 ```
 
 6. Create a Pull Request (PR) as Draft 
@@ -63,7 +63,7 @@ git pull origin main
 ```
 Switch back to your feature branch:
 ```bash
-git checkout feature/your-branch-name
+git checkout yourname/feature/your-branch-name
 ```
 Merge main into your feature branch:
 ```bash
@@ -76,7 +76,7 @@ git commit -m "Resolved merge conflicts with main"
 ```
 Push the updated branch to GitHub:
 ```bash
-git push origin feature/your-branch-name
+git push origin yourname/feature/your-branch-name
 ```
 
 8. Participate in the Code Review
