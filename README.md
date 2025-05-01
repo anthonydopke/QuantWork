@@ -41,7 +41,7 @@ This allows you to modify the source code and have the changes reflected immedia
 
 ```
 QuantWork/
-│
+├── data_excel_csv/   
 ├── src/
 │   └── MarketData/
 │       ├── OptionDataFetcher.py
