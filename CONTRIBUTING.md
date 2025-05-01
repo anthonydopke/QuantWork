@@ -78,11 +78,13 @@ Push the updated branch to GitHub:
 ```bash
 git push origin yourname/feature/your-branch-name
 ```
+8. Once it is up to date , mark your PR as Ready For Review
 
-8. Participate in the Code Review
+9. Participate in the Code Review
 Respond to any feedback from reviewers.
 Make additional commits to the same branch if updates are needed.
-9. Merge the PR
+
+10. Merge the PR
 Once approved, you or a maintainer can merge the pull request. (automerge is available)
 
 💡 Tips
