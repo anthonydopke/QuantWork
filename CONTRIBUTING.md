@@ -2,6 +2,9 @@
 
 We welcome contributions from everyone! Follow the steps below to contribute to this project by creating a branch, making your changes, and submitting a pull request.
 
+### Why We Use Pull Requests
+A pull request (PR) is a way to propose changes to a project. When you're working on a GitHub project, you don’t make changes directly to the main codebase. Instead, you create a branch to make your changes, and then submit a pull request to ask the project maintainers to review and merge your changes into the main branch. This process helps ensure that the changes are reviewed, tested, and do not break the code before being added to the main project. Think of it as a "request" to pull your changes into the project, and it's an important part of working collaboratively on coding projects.
+
 ## 🚀 Getting Started
 
 To contribute, you need a GitHub account and access to this repository as a collaborator.
@@ -38,8 +41,15 @@ Push the branch to the remote repository:
 git push origin feature/your-branch-name
 ```
 
-6. Keep Your Branch Up to Date with main
-Before creating a pull request, make sure your branch is up to date with the main branch. This will help avoid merge conflicts and ensure your changes are based on the latest version of the project.
+6. Create a Pull Request (PR) as Draft 
+Go to the repository on GitHub.
+You’ll see a prompt to open a pull request for your newly pushed branch.
+Click "Compare & pull request".
+Add a clear title and description of your changes.
+Select "Create draft pull request".
+
+7. Keep Your Branch Up to Date with main
+Before setting your pull request as ready for review , make sure your branch is up to date with the main branch. This will help avoid merge conflicts and ensure your changes are based on the latest version of the project.
 
 To update your branch with main, follow these steps:
 
@@ -68,16 +78,11 @@ Push the updated branch to GitHub:
 ```bash
 git push origin feature/your-branch-name
 ```
-6. Create a Pull Request (PR)
-Go to the repository on GitHub.
-You’ll see a prompt to open a pull request for your newly pushed branch.
-Click "Compare & pull request".
-Add a clear title and description of your changes.
-Click "Create pull request".
-7. Participate in the Code Review
+
+8. Participate in the Code Review
 Respond to any feedback from reviewers.
 Make additional commits to the same branch if updates are needed.
-8. Merge the PR
+9. Merge the PR
 Once approved, you or a maintainer can merge the pull request. (automerge is available)
 
 💡 Tips
