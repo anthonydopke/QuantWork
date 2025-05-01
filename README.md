@@ -5,7 +5,7 @@
 **QuantWork** is a Python project for financial modeling and market data analysis.
 
 There are currently two major development streams:
-1. **Market Data** — Fetch and analyze real market data (options, stock prices, interest rates) from Yahoo Finance.
+1. **Market Data** — Fetch and analyze real market data (options, stock prices, interest rates) from Yahoo Finance (or local csv/excel files)
 2. **Quant Library** — Build and implement quantitative models (in progress).
 
 ---
