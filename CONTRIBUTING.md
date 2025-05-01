@@ -11,8 +11,8 @@ To contribute, you need a GitHub account and access to this repository as a coll
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/your-repository.git
-cd your-repository
+git clone https://github.com/anthonydopke/QuantWork.git
+cd QuantWork
 ```
 2. Create a New Branch
 Create a new branch for your work. Use a meaningful name that reflects the purpose of the branch:
@@ -37,6 +37,37 @@ Push the branch to the remote repository:
 ```bash
 git push origin feature/your-branch-name
 ```
+
+6. Keep Your Branch Up to Date with main
+Before creating a pull request, make sure your branch is up to date with the main branch. This will help avoid merge conflicts and ensure your changes are based on the latest version of the project.
+
+To update your branch with main, follow these steps:
+
+Switch to the main branch:
+```bash
+git checkout main
+```
+Pull the latest changes from main:
+```bash
+git pull origin main
+```
+Switch back to your feature branch:
+```bash
+git checkout feature/your-branch-name
+```
+Merge main into your feature branch:
+```bash
+git merge main
+```
+If there are any conflicts, resolve them. After resolving conflicts, commit the changes:
+```bash
+git add .
+git commit -m "Resolved merge conflicts with main"
+```
+Push the updated branch to GitHub:
+```bash
+git push origin feature/your-branch-name
+```
 6. Create a Pull Request (PR)
 Go to the repository on GitHub.
 You’ll see a prompt to open a pull request for your newly pushed branch.
@@ -47,7 +78,7 @@ Click "Create pull request".
 Respond to any feedback from reviewers.
 Make additional commits to the same branch if updates are needed.
 8. Merge the PR
-Once approved, you or a maintainer can merge the pull request.
+Once approved, you or a maintainer can merge the pull request. (automerge is available)
 
 💡 Tips
 
