@@ -89,5 +89,6 @@ Once approved, you or a maintainer can merge the pull request. (automerge is ava
 
 Keep PRs small and focused for easier reviews.
 Write clear, concise commit messages.
+You can of course create different branches to work on differents features at the same time :) 
 Use descriptive names for branches and PRs.
 Thank you for contributing! 🙌
