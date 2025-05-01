@@ -9,7 +9,7 @@ A pull request (PR) is a way to propose changes to a project. When you're workin
 
 To contribute, you need a GitHub account and access to this repository as a collaborator.
 
-### 1. Clone the Repository
+### 1. Clone the Repository (Only one time )
 
 First, clone the repository to your local machine:
 
@@ -17,6 +17,8 @@ First, clone the repository to your local machine:
 git clone https://github.com/anthonydopke/QuantWork.git
 cd QuantWork
 ```
+
+### Create Branch, work on it, create PR and Merge 
 2. Create a New Branch
 Create a new branch for your work. Use a meaningful name that reflects the purpose of the branch:
 ```bash
