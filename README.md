@@ -15,7 +15,7 @@ There are currently two major development streams:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/anthonydopke/QuantWork.git
+git clone https://github.com/Quantitative-Research/QuantWork.git
 cd QuantWork
 ```
 
