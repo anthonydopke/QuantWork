@@ -43,12 +43,13 @@ This allows you to modify the source code and have the changes reflected immedia
 QuantWork/
 ├── data_excel_csv/   
 ├── src/
-│   └── MarketData/
-│       ├── OptionDataFetcher.py
-│       └── TreasuryCurveFetcher.py
+│   ├── MarketDataLoader/
+│   │   ├── OptionDataFetcher.py
+│   │   └── TreasuryCurveFetcher.py
+│   └── Models/     
 │
 ├── tests/
-│   └── example_notebook.ipynb
+│   └── test_import_data.ipynb
 │
 ├── README.md
 ├── setup.py
@@ -81,7 +82,6 @@ apple_data.plot_forward_curve()
 
 - ✅ Fetch stock and option chain data from Yahoo Finance
 - ✅ Build interpolated forward curves
-- ✅ Analyze implied volatility smiles
 - 🚧 Work-in-progress: Quantitative models (pricing, calibration)
 
 ---

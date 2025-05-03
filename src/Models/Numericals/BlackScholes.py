@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 from abc import ABC, abstractmethod
-from OptionType import OptionType
+from .OptionType import OptionType
 
 # === Black-Scholes model ===
 
@@ -85,3 +85,4 @@ class BlackScholes:
             return K * T * np.exp(-self.r * T) * norm.cdf(d2)
         elif option == OptionType.PUT:
             return -K * T * np.exp(-self.r * T) * norm.cdf(-d2)
+        
