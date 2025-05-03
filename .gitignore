@@ -1,15 +1,1 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-env/
 venv/
-*.egg-info/
-.ipynb_checkpoints/
-
-# VSCode
-.vscode/
-
-# Mac
-.DS_Store

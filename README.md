@@ -1,103 +1,27 @@
-# QuantWork 📈
+# QuantWork
 
-## Overview
+**QuantWork** is a Python-based project that focuses on financial data analysis and quantitative modeling. The project is divided into two primary streams:
 
-**QuantWork** is a Python project for financial modeling and market data analysis.
+### 1) **Market Data Analysis from Yahoo Finance**
+This part of the project involves retrieving and analyzing real-time market data from Yahoo Finance. The goal is to fetch data such as stock prices, options data, implied volatilities, and other key market indicators. 
 
-There are currently two major development streams:
-1. **Market Data** — Fetch and analyze real market data (options, stock prices, interest rates) from Yahoo Finance (or local csv/excel files)
-2. **Quant Library** — Build and implement quantitative models (in progress).
+- **Key Features**:
+  - Fetch real-time market data from Yahoo Finance using `yfinance`.
+  - Extract and analyze stock options data (calls, puts, strikes, implied volatility).
+  - Estimate forward curves and interest rate curves based on market data.
+  - Visualization tools for market data analysis, including volatility smiles and forward curve plots, risk neutral probability densities.
 
----
+### 2) **Quantitative Library and Financial Models**
+The second stream is focused on building a quantitative library with financial models. This includes implementing various models used in finance for pricing, risk analysis, and optimization.
 
-## Installation
+- **Key Features**:
+  - Implementation of common financial models (e.g., Black-Scholes, Monte Carlo simulation, option pricing models).
+ 
+  To get relevant results from the second stream, we must first focus on the first stream :)
+    
 
-### 1. Clone the repository
+### Installation
 
-```bash
-git clone https://github.com/anthonydopke/QuantWork.git
-cd QuantWork
-```
-
-### 2. Create and activate a virtual environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate    # On Mac/Linux
-venv\Scripts\activate       # On Windows
-```
-
-### 3. Install the project in editable mode
-
-```bash
-pip install -e .
-```
-
-This allows you to modify the source code and have the changes reflected immediately.
-
----
-
-## Project Structure
-
-```
-QuantWork/
-├── data_excel_csv/   
-├── src/
-│   └── MarketData/
-│       ├── OptionDataFetcher.py
-│       └── TreasuryCurveFetcher.py
-│
-├── tests/
-│   └── example_notebook.ipynb
-│
-├── README.md
-├── setup.py
-└── requirements.txt
-```
-
----
-
-## Quick Usage Example
-
-```python
-from MarketData.OptionDataFetcher import OptionDataFetcher
-
-# Initialize with a ticker
-apple_data = OptionDataFetcher("AAPL")
-
-# Fetch market data and build the forward curve
-apple_data.build_market()
-
-# List available maturities
-print(apple_data.get_maturities())
-
-# Plot the forward curve
-apple_data.plot_forward_curve()
-```
-
----
-
-## Features
-
-- ✅ Fetch stock and option chain data from Yahoo Finance
-- ✅ Build interpolated forward curves
-- ✅ Analyze implied volatility smiles
-- 🚧 Work-in-progress: Quantitative models (pricing, calibration)
-
----
-
-## Contributions
-
-Feel free to fork the project and open pull requests! 🚀  
-If you encounter issues or have feature requests, open a [GitHub Issue](https://github.com/anthonydopke/QuantWork/issues).
-
----
-
-## Disclaimer
-
-This project is under development and is intended for educational and research purposes only.
-
----
-
-# 📢 Stay tuned for more quant tools!
-
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/anthonydopke/QuantWork.git
