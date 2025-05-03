@@ -1,5 +1,5 @@
-from src.Models.Numericals.Black76 import Black76
-from src.Models.Numericals.OptionType import OptionType
+from Models.Numericals.Black76 import Black76
+from Models.Numericals.OptionType import OptionType
 
 def test_call_price():
     model = Black76(F=100, T=1, discount_rate=0.05)
