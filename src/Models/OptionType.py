@@ -8,3 +8,4 @@ class OptionType(Enum):
     DIGITAL_CALL = auto()
     DIGITAL_PUT = auto()
     STRADDLE = auto()
+    
