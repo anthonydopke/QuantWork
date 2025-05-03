@@ -1,4 +1,3 @@
-import math
 from src.Models.Numericals.Black76 import Black76
 from src.Models.Numericals.OptionType import OptionType
 
