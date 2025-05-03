@@ -61,7 +61,7 @@ QuantWork/
 ## Quick Usage Example
 
 ```python
-from MarketData.OptionDataFetcher import OptionDataFetcher
+from MarketDataLoader.OptionDataFetcher import OptionDataFetcher
 
 # Initialize with a ticker
 apple_data = OptionDataFetcher("AAPL")
