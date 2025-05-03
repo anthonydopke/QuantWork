@@ -99,3 +99,15 @@ class Market:
         Get interpolated forward price for a given maturity (in years).
         """
         return float(self._forward_curve_interpolated(T))
+
+    def get_volatility(self, K : float, T: float) -> float:
+        """
+        Get interpolated volatility for a given strike and maturity (in years).
+        """
+        pass
+
+    def get_DiscountFactor(self, T : float) -> float:
+        """
+        Get Discount Factor for a given maturity (in years).
+        """
+        pass
