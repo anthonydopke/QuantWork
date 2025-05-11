@@ -13,6 +13,19 @@ def test_MarketBuilder():
     fwd = mkt.get_forward(T_test)
     assert isinstance(fwd, float) and fwd > 0, "Forward price interpolation failed"
 
+def test_VolatilityMatrixShape():
+    xl_file = data_path('spx_1_nov_24.xlsx')
+    pricingdate = datetime.datetime(2024, 11, 1)
+    mkt = Market(xl_file, pricingdate)
+
+    vol_matrix = mkt.vol_surface 
+    n_strikes = len(mkt.strikes)
+    n_maturities = len(mkt.maturities)
+
+    assert len(vol_matrix) == n_strikes, f"Expected {n_strikes} rows (strikes), got {len(vol_matrix)}"
+    for row in vol_matrix:
+        assert len(row) == n_maturities, f"Each row should have {n_maturities} columns (maturities)"
+
 def test_VolatilityInterpolation():
     xl_file = data_path('spx_1_nov_24.xlsx')
     pricingdate = datetime.datetime(2024, 11, 1)
