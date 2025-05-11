@@ -2,8 +2,8 @@ import numpy as np
 from .Numericals.Black76 import Black76
 from .PricingModel import PricingModel
 from MarketDataLoader.MarketFromExcel import Market
-from ..Products.Enums import OptionType
-from ..Products.Option import VanillaOption
+from Products.Enums import OptionType
+from Products.Option import VanillaOption
 
 class BlackModel(PricingModel):
     def __init__(self, market: Market):
