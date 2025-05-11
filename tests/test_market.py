@@ -22,9 +22,9 @@ def test_VolatilityMatrixShape():
     n_strikes = len(mkt.strikes)
     n_maturities = len(mkt.maturities)
 
-    assert len(vol_matrix) == n_strikes, f"Expected {n_strikes} rows (strikes), got {len(vol_matrix)}"
+    assert len(vol_matrix) == n_maturities, f"Expected {n_maturities} rows (maturities), got {len(vol_matrix)}"
     for row in vol_matrix:
-        assert len(row) == n_maturities, f"Each row should have {n_maturities} columns (maturities)"
+        assert len(row) == n_strikes, f"Each row should have {n_strikes} columns (strikes)"
 
 def test_VolatilityInterpolation():
     xl_file = data_path('spx_1_nov_24.xlsx')
