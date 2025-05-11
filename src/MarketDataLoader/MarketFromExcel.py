@@ -59,8 +59,15 @@ class Market:
         strikes_row = moneyness * forwards[0]
         vol_matrix = vol_data.iloc[1:].astype(float).values
 
+        # Copy the first line of the vol matrix
+        first_row = vol_matrix[0, :].reshape(1, -1)  # Reshape to 2D for stacking
+
+        # Stack the first row at the beginning of the vol_matrix
+        vol_matrix_with_first_row = np.vstack((first_row, vol_matrix))
+
+        # Update the internal variables
         self._strikes = strikes_row
-        self._vol_KT = vol_matrix / 100
+        self._vol_KT = vol_matrix_with_first_row / 100
 
         # Compute spot from strike and moneyness
         self._spot = forwards[0]  # Assuming consistent moneyness-strike structure
