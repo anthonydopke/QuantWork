@@ -21,7 +21,7 @@ def test_VolatilityInterpolation():
     # 1. Volatility exactly on the grid
     known_T = mkt.maturities[1]  # not the first one (which may be spot)
     known_K = mkt.strikes[2]
-    vol_exact = mkt.vol_surface[known_T][known_K]
+    vol_exact = mkt.vol_surface[known_T,known_K]
     vol_exact_interp = mkt.get_volatility(known_K, known_T)
     assert isinstance(vol_exact_interp, float)
     assert vol_exact == vol_exact_interp
