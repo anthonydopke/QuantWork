@@ -2,8 +2,6 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.interpolate import interp1d
-
-
 class OptionDataFetcher:
     def __init__(self, ticker):
         self.ticker = ticker
@@ -87,8 +85,6 @@ class OptionDataFetcher:
         
         return float(self.forward_interpolator(expiry_day))
 
-
-
     def get_maturities(self):
         return list(self.option_maturities.keys())
 
@@ -130,8 +126,6 @@ class OptionDataFetcher:
         plt.grid(True)
         plt.show()
 
-
-
 class OptionMaturity:
     def __init__(self, expiry, calls, puts, spot_price):
         self.expiry = expiry
@@ -148,30 +142,49 @@ class OptionMaturity:
     
     def estimate_forward(self):
         """
-        Estimate the forward price using Put-Call Parity around ATM strikes.
-
+        Estimate the forward price by interpolating the strike where C - P = 0 (put-call parity).
+        
         Returns:
             float: estimated forward price
         """
-        # Merge calls and puts on strike
-        merged = pd.merge(self.calls[['strike', 'lastPrice']], 
-                        self.puts[['strike', 'lastPrice']], 
-                        on='strike', 
-                        suffixes=('_call', '_put'))
-        
-        # Find strike closest to spot
-        merged['abs_diff'] = (merged['strike'] - self.spot_price).abs()
-        atm_row = merged.loc[merged['abs_diff'].idxmin()]
+        # Merge call and put prices on strike
+        merged = pd.merge(
+            self.calls[['strike', 'lastPrice']],
+            self.puts[['strike', 'lastPrice']],
+            on='strike',
+            suffixes=('_call', '_put')
+        )
 
-        K = atm_row['strike']
-        C = atm_row['lastPrice_call']
-        P = atm_row['lastPrice_put']
+        # Compute call - put differences
+        merged['cp_diff'] = merged['lastPrice_call'] - merged['lastPrice_put']
 
-        # Put-call parity approximation
-        forward = K + (C - P)
+        # Sort by strike to prepare for interpolation
+        merged = merged.sort_values(by='strike').reset_index(drop=True)
 
-        return forward
+        # Find where cp_diff crosses zero (i.e. changes sign)
+        for i in range(1, len(merged)):
+            prev_diff = merged.loc[i - 1, 'cp_diff']
+            curr_diff = merged.loc[i, 'cp_diff']
 
+            if prev_diff * curr_diff <= 0:  # Sign change (crossed zero)
+                K1 = merged.loc[i - 1, 'strike']
+                K2 = merged.loc[i, 'strike']
+                D1 = prev_diff
+                D2 = curr_diff
+
+                # Linear interpolation to find K such that C - P = 0
+                if D2 != D1:  # avoid divide by zero
+                    K_interp = K1 - D1 * (K2 - K1) / (D2 - D1)
+                else:
+                    K_interp = K1  # arbitrary; means prices are identical
+
+                return float(K_interp)
+
+        # Fallback: no crossing found, use strike with min |C - P|
+        print("Warning: No zero crossing found in C - P; using closest estimate.")
+        merged['abs_cp_diff'] = merged['cp_diff'].abs()
+        best_row = merged.loc[merged['abs_cp_diff'].idxmin()]
+        return float(best_row['strike'] + best_row['cp_diff'])
 
 ## Plotting 
     def plot_smile(self, option_type='call', x_axis='strike'):
