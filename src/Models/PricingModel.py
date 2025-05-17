@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from MarketDataLoader.MarketFromExcel import Market
+from Products.Option import VanillaOption
 
 class PricingModel(ABC):
     def __init__(self, market: Market):
@@ -16,4 +17,8 @@ class PricingModel(ABC):
 
     @abstractmethod
     def AvailablePricingMethod(self):
+        pass
+    
+    @abstractmethod
+    def PriceVanillaOption(self, vanilla = VanillaOption):
         pass

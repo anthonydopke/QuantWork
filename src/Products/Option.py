@@ -17,7 +17,7 @@ class VanillaOption(Option):
         super().__init__(K, T, sigma, option_type)
 
 class Straddle(Option):
-    def __init__(self, K, T, sigma=None, option_type=OptionType.CALL):
+    def __init__(self, K, T, sigma=None, option_type=OptionType.STRADDLE):
         super().__init__(K, T, sigma, option_type)
     
 

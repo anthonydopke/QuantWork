@@ -1,17 +1,18 @@
-from Products.EuropeanCustom import EuropeanCustomOption
 from Models.PricingModel import PricingModel
-from Models.BlackModel import BlackModel
+from Products.Option import Option
+from abc import ABC
 
-class PriceableCustomEuropean:
-    def __init__(self, pricing_model: BlackModel, european_custom_option: EuropeanCustomOption):
-        self.model = pricing_model
-        self.custom_option = european_custom_option
+class Priceable(ABC):
+    def __init__(self, model: PricingModel, option: Option):
+        self._model = model
+        self._option = option
 
-    def price(self) -> float:
-        total_price = 0.0
-        for vanilla_option, weight in self.custom_option.list_calls:
-            total_price += self.model.PriceVanillaOption(vanilla_option) * weight
-        for vanilla_option, weight in self.custom_option.list_puts:
-            total_price += self.model.PriceVanillaOption(vanilla_option) * weight
-        return total_price
+    @property
+    def model(self) -> PricingModel:
+        """Returns the pricing model."""
+        return self._model
 
+    @property
+    def option(self) -> Option:
+        """Returns the financial option."""
+        return self._option
