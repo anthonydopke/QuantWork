@@ -20,6 +20,8 @@ class BlackModel(PricingModel):
         vol = self.market.get_volatility(K, T)
         F = self.market.get_forward(T)
         DiscountFactor = self.market.get_DiscountFactor(T)
+        if DiscountFactor is None:
+            DiscountFactor = 1
         if OptionType == OptionType.CALL:
             return DiscountFactor * Black76(F = F, T = T).call_price(K = K, sigma = vol)
         elif OptionType == OptionType.PUT:
@@ -28,6 +30,6 @@ class BlackModel(PricingModel):
             raise NotImplementedError(f"Can not price {OptionType} with current method")
 
     def PriceVanillaOption(self, vanilla = VanillaOption):
-        K, T, option_type = vanilla.K, vanilla.T, vanilla.option_type
-        return self._PriceVanillaOption(K, T, option_type)
+        K, T, option_type, quantity = vanilla.K, vanilla.T, vanilla.option_type, vanilla.quantity
+        return self._PriceVanillaOption(K, T, option_type) * quantity
 
