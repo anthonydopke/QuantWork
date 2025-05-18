@@ -8,7 +8,7 @@ class CustomEuropeanPriceable(Priceable):
     def price(self) -> float:
         total_price = 0.0
         for vanilla_option in self.option.list_calls:
-            total_price += self.model.PriceVanillaOption(vanilla_option) * vanilla_option.quantity
+            total_price += self.model.PriceVanillaOption(vanilla_option) 
         for vanilla_option in self.option.list_puts:
-            total_price += self.model.PriceVanillaOption(vanilla_option) * vanilla_option.quantity
+            total_price += self.model.PriceVanillaOption(vanilla_option)
         return total_price
