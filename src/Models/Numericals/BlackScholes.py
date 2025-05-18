@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 from abc import ABC, abstractmethod
-from .OptionType import OptionType
+from Products.Enums import OptionType
 
 # === Black-Scholes model ===
 
