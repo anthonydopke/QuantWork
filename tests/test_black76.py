@@ -1,5 +1,5 @@
 from Models.Numericals.Black76 import Black76
-from Models.Numericals.OptionType import OptionType
+from Products.Enums import OptionType
 
 def test_CallPrice():
     model = Black76(F=100, T=1, discount_rate=0.05)
