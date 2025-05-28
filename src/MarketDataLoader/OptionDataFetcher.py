@@ -1,15 +1,15 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from scipy.interpolate import interp1d
-
-
 class OptionDataFetcher:
     def __init__(self, ticker):
         self.ticker = ticker
         self.option_maturities = {}
         self.spot_price = None
         self.forward_curve = None
+        self.zc_curve = None
     
     def build_market(self):
         """
@@ -17,6 +17,7 @@ class OptionDataFetcher:
         """
         self.fetch_options()
         self.build_forward_curve()
+        self.build_ZC_curve()
 
     def fetch_options(self):
         stock = yf.Ticker(self.ticker)
@@ -59,6 +60,63 @@ class OptionDataFetcher:
 
             # Build interpolator
             self.forward_interpolator = interp1d(expiry_days, forwards, kind='linear', fill_value="extrapolate")
+    
+    def build_ZC_curve(self):
+        """
+        Build zero-coupon curve using put-call parity near the forward price.
+        
+        Sets:
+            self.zc_curve: pd.DataFrame with columns ['expiry_date', 'days_to_expiry', 'B0T', 'zero_rate']
+        """
+        results = []
+        today = pd.Timestamp.today()
+
+        for expiry, maturity in self.option_maturities.items():
+            try:
+                expiry_date = pd.to_datetime(expiry)
+                T_days = (expiry_date - today).days
+                T = T_days / 365.25
+                if T <= 0:
+                    continue
+
+                F_T = maturity.estimate_forward()
+                calls = maturity.calls
+                puts = maturity.puts
+
+                # Find strike K closest to F_T
+                strikes = calls['strike']
+                closest_idx = (strikes - F_T).abs().idxmin()
+                K = strikes.loc[closest_idx]
+
+                C_TK = calls.loc[closest_idx, 'lastPrice']
+                P_TK = puts.loc[puts['strike'] == K, 'lastPrice']
+                if P_TK.empty:
+                    continue  # no matching put
+                P_TK = P_TK.values[0]
+
+                # Use the identity
+                denominator = F_T - K
+                if denominator == 0:
+                    continue  # avoid divide by zero
+                B_0T = (C_TK - P_TK) / denominator
+
+                if B_0T <= 0 or not np.isfinite(B_0T):
+                    continue  # discard bad values
+
+                zero_rate = -np.log(B_0T) / T
+
+                results.append({
+                    'expiry_date': expiry_date,
+                    'days_to_expiry': T_days,
+                    'B0T': B_0T,
+                    'zero_rate': zero_rate
+                })
+            except Exception as e:
+                print(f"Failed for expiry {expiry}: {e}")
+                continue
+
+        self.zc_curve = pd.DataFrame(results).sort_values(by='days_to_expiry').reset_index(drop=True)
+        return self.zc_curve
 
     def get_forward(self, expiry):
         """
@@ -86,8 +144,6 @@ class OptionDataFetcher:
             raise TypeError(f"Unsupported expiry type: {type(expiry)}. Must be datetime, str, int or float.")
         
         return float(self.forward_interpolator(expiry_day))
-
-
 
     def get_maturities(self):
         return list(self.option_maturities.keys())
@@ -130,8 +186,6 @@ class OptionDataFetcher:
         plt.grid(True)
         plt.show()
 
-
-
 class OptionMaturity:
     def __init__(self, expiry, calls, puts, spot_price):
         self.expiry = expiry
@@ -148,30 +202,49 @@ class OptionMaturity:
     
     def estimate_forward(self):
         """
-        Estimate the forward price using Put-Call Parity around ATM strikes.
-
+        Estimate the forward price by interpolating the strike where C - P = 0 (put-call parity).
+        
         Returns:
             float: estimated forward price
         """
-        # Merge calls and puts on strike
-        merged = pd.merge(self.calls[['strike', 'lastPrice']], 
-                        self.puts[['strike', 'lastPrice']], 
-                        on='strike', 
-                        suffixes=('_call', '_put'))
-        
-        # Find strike closest to spot
-        merged['abs_diff'] = (merged['strike'] - self.spot_price).abs()
-        atm_row = merged.loc[merged['abs_diff'].idxmin()]
+        # Merge call and put prices on strike
+        merged = pd.merge(
+            self.calls[['strike', 'lastPrice']],
+            self.puts[['strike', 'lastPrice']],
+            on='strike',
+            suffixes=('_call', '_put')
+        )
 
-        K = atm_row['strike']
-        C = atm_row['lastPrice_call']
-        P = atm_row['lastPrice_put']
+        # Compute call - put differences
+        merged['cp_diff'] = merged['lastPrice_call'] - merged['lastPrice_put']
 
-        # Put-call parity approximation
-        forward = K + (C - P)
+        # Sort by strike to prepare for interpolation
+        merged = merged.sort_values(by='strike').reset_index(drop=True)
 
-        return forward
+        # Find where cp_diff crosses zero (i.e. changes sign)
+        for i in range(1, len(merged)):
+            prev_diff = merged.loc[i - 1, 'cp_diff']
+            curr_diff = merged.loc[i, 'cp_diff']
 
+            if prev_diff * curr_diff <= 0:  # Sign change (crossed zero)
+                K1 = merged.loc[i - 1, 'strike']
+                K2 = merged.loc[i, 'strike']
+                D1 = prev_diff
+                D2 = curr_diff
+
+                # Linear interpolation to find K such that C - P = 0
+                if D2 != D1:  # avoid divide by zero
+                    K_interp = K1 - D1 * (K2 - K1) / (D2 - D1)
+                else:
+                    K_interp = K1  # arbitrary; means prices are identical
+
+                return float(K_interp)
+
+        # Fallback: no crossing found, use strike with min |C - P|
+        print("Warning: No zero crossing found in C - P; using closest estimate.")
+        merged['abs_cp_diff'] = merged['cp_diff'].abs()
+        best_row = merged.loc[merged['abs_cp_diff'].idxmin()]
+        return float(best_row['strike'] + best_row['cp_diff'])
 
 ## Plotting 
     def plot_smile(self, option_type='call', x_axis='strike'):
