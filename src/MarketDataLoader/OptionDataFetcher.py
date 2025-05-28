@@ -1,6 +1,7 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from scipy.interpolate import interp1d
 class OptionDataFetcher:
     def __init__(self, ticker):
@@ -8,6 +9,7 @@ class OptionDataFetcher:
         self.option_maturities = {}
         self.spot_price = None
         self.forward_curve = None
+        self.zc_curve = None
     
     def build_market(self):
         """
@@ -15,6 +17,7 @@ class OptionDataFetcher:
         """
         self.fetch_options()
         self.build_forward_curve()
+        self.build_ZC_curve()
 
     def fetch_options(self):
         stock = yf.Ticker(self.ticker)
@@ -57,6 +60,63 @@ class OptionDataFetcher:
 
             # Build interpolator
             self.forward_interpolator = interp1d(expiry_days, forwards, kind='linear', fill_value="extrapolate")
+    
+    def build_ZC_curve(self):
+        """
+        Build zero-coupon curve using put-call parity near the forward price.
+        
+        Sets:
+            self.zc_curve: pd.DataFrame with columns ['expiry_date', 'days_to_expiry', 'B0T', 'zero_rate']
+        """
+        results = []
+        today = pd.Timestamp.today()
+
+        for expiry, maturity in self.option_maturities.items():
+            try:
+                expiry_date = pd.to_datetime(expiry)
+                T_days = (expiry_date - today).days
+                T = T_days / 365.25
+                if T <= 0:
+                    continue
+
+                F_T = maturity.estimate_forward()
+                calls = maturity.calls
+                puts = maturity.puts
+
+                # Find strike K closest to F_T
+                strikes = calls['strike']
+                closest_idx = (strikes - F_T).abs().idxmin()
+                K = strikes.loc[closest_idx]
+
+                C_TK = calls.loc[closest_idx, 'lastPrice']
+                P_TK = puts.loc[puts['strike'] == K, 'lastPrice']
+                if P_TK.empty:
+                    continue  # no matching put
+                P_TK = P_TK.values[0]
+
+                # Use the identity
+                denominator = F_T - K
+                if denominator == 0:
+                    continue  # avoid divide by zero
+                B_0T = (C_TK - P_TK) / denominator
+
+                if B_0T <= 0 or not np.isfinite(B_0T):
+                    continue  # discard bad values
+
+                zero_rate = -np.log(B_0T) / T
+
+                results.append({
+                    'expiry_date': expiry_date,
+                    'days_to_expiry': T_days,
+                    'B0T': B_0T,
+                    'zero_rate': zero_rate
+                })
+            except Exception as e:
+                print(f"Failed for expiry {expiry}: {e}")
+                continue
+
+        self.zc_curve = pd.DataFrame(results).sort_values(by='days_to_expiry').reset_index(drop=True)
+        return self.zc_curve
 
     def get_forward(self, expiry):
         """
